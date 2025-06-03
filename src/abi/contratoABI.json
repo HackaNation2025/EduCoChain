@@ -1,0 +1,166 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address payable", "name": "_empresaContratada", "type": "address" },
+      { "internalType": "address payable", "name": "_orgaoGoverno", "type": "address" },
+      { "internalType": "uint256", "name": "_valorTotalContrato", "type": "uint256" },
+      { "internalType": "string", "name": "_descricaoProdutoServico", "type": "string" },
+      { "internalType": "string", "name": "_localizacaoEntrega", "type": "string" },
+      { "internalType": "uint256", "name": "_prazo", "type": "uint256" },
+      { "internalType": "address", "name": "_oracleAddress", "type": "address" }
+    ],
+    "stateMutability": "payable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "votante", "type": "address" },
+      { "indexed": false, "internalType": "bool", "name": "voto", "type": "bool" }
+    ],
+    "name": "VotoRegistrado",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "depositarVerba",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "estadoAtual",
+    "outputs": [
+      { "internalType": "enum LiberacaoVerbaComValidacaoPublica.EstadoContrato", "name": "", "type": "uint8" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "finalizarContrato",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "notificarConclusaoServico",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "quantidadeEstipulada",
+  "outputs": [
+    {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+},
+  {
+    "inputs": [
+      { "internalType": "bool", "name": "_voto", "type": "bool" }
+    ],
+    "name": "votar",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "podeReivindicarRecompensa",
+    "outputs": [
+      { "internalType": "bool", "name": "", "type": "bool" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "reivindicarRecompensa",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "resgatarFundosNaoUtilizados",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "valorTotalContrato",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "descricaoProdutoServico",
+    "outputs": [
+      { "internalType": "string", "name": "", "type": "string" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+   {
+    "inputs": [],
+    "name": "localizacaoEntrega",
+    "outputs": [
+      { "internalType": "string", "name": "", "type": "string" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "empresaContratada",
+    "outputs": [
+      { "internalType": "address payable", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "orgaoGoverno",
+    "outputs": [
+      { "internalType": "address payable", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "listaDeVotantes",
+    "outputs": [
+      { "internalType": "address[]", "name": "", "type": "address[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "", "type": "address" }
+    ],
+    "name": "jaVotou",
+    "outputs": [
+      { "internalType": "bool", "name": "", "type": "bool" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
+
+
