@@ -1,31 +1,36 @@
-import React, { useEffect } from "react";
-import { View, Text, ActivityIndicator, Alert, Button } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, Image, TextInput, Alert } from "react-native";
 import { useWallet } from "../../src/wallet/useWallet";
 import { useRouter } from "expo-router";
+import styles from "../styles/styles";  // Ajuste o caminho se necessário
 
-const GOVERNO_ADDRESS = "0x7A70375d0f6a7E2222150670C1a97f5Ba576084C".toLowerCase();
+const GOVERNO_ADDRESSES = [
+  "0x7A70375d0f6a7E2222150670C1a97f5Ba576084C",
+  "0x6259c18086E3f7cbB47758233A7899e774711288",
+].map(addr => addr.toLowerCase());
 
 export default function MenuGoverno() {
   const { session, getAddress, disconnectWallet } = useWallet();
   const router = useRouter();
+  const [enderecoContrato, setEnderecoContrato] = useState("");
 
-  const address = getAddress()?.toLowerCase();
+  // Garante que address seja string (ou string vazia)
+  const address = getAddress()?.toLowerCase() ?? "";
 
   useEffect(() => {
-    if (!session || address !== GOVERNO_ADDRESS) {
+    if (!session || !address || !GOVERNO_ADDRESSES.includes(address)) {
       Alert.alert("Acesso negado", "Você não tem permissão para acessar esta área.");
       router.replace("/");
     }
   }, [session, address]);
 
-  if (!session || address !== GOVERNO_ADDRESS) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-        <Text style={{ marginTop: 10 }}>Verificando permissões...</Text>
-      </View>
-    );
-  }
+  const irParaDetalhes = () => {
+    if (!enderecoContrato || enderecoContrato.length !== 42) {
+      Alert.alert("Erro", "Endereço de contrato inválido.");
+      return;
+    }
+    router.push({ pathname: "/governo/detalhes", params: { contrato: enderecoContrato } });
+  };
 
   const handleDisconnect = async () => {
     try {
@@ -37,20 +42,40 @@ export default function MenuGoverno() {
     }
   };
 
+  if (!session || !address || !GOVERNO_ADDRESSES.includes(address)) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title2}>Verificando permissões...</Text>
+      </View>
+    );
+  }
+
   return (
-    <View
-      style={{ flex: 1, padding: 20, justifyContent: "center", alignItems: "center" }}
-    >
-      <Text style={{ fontSize: 26, fontWeight: "bold", marginBottom: 20 }}>
-        Painel do Governo
-      </Text>
+    <View style={styles.container}>
+      <Image source={require("../../assets/images/icon.png")} style={styles.icon} />
+      <Text style={styles.title2}>Painel do Governo</Text>
 
-      <Text style={{ fontSize: 18, textAlign: "center", marginBottom: 40 }}>
-        Bem-vindo, administrador da rede pública. Você pode gerenciar contratos, liberar
-        verbas e monitorar atividades públicas a partir deste painel.
-      </Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Endereço do contrato (0x...)"
+          value={enderecoContrato}
+          onChangeText={setEnderecoContrato}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
 
-      <Button title="Desconectar" onPress={handleDisconnect} color="#d9534f" />
+        <TouchableOpacity style={styles.button} onPress={irParaDetalhes}>
+          <Text style={styles.buttonText}>🔎</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity
+        onPress={handleDisconnect}
+        style={[styles.buttonDesconnect, { backgroundColor: "#d9534f", marginTop: 30, paddingVertical: 15 }]}
+      >
+        <Text style={styles.buttonText}>Desconectar</Text>
+      </TouchableOpacity>
     </View>
   );
 }

@@ -6,7 +6,10 @@ import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-na
 import { useWallet } from "../src/wallet/useWallet";
 import { useRouter } from "expo-router";
 
-const GOVERNO_ADDRESS = "0x7A70375d0f6a7E2222150670C1a97f5Ba576084C".toLowerCase();
+const GOVERNO_ADDRESSES = [
+  "0x7A70375d0f6a7E2222150670C1a97f5Ba576084C",
+  "0x6259c18086E3f7cbB47758233A7899e774711288",
+].map(addr => addr.toLowerCase());
 
 export default function IndexScreen() {
   const { walletClient, session, connectWallet, disconnectWallet, getAddress } = useWallet();
@@ -44,15 +47,16 @@ export default function IndexScreen() {
   }, [walletClient, session]);
 
   useEffect(() => {
-    if (address && !navigated) {
-      if (address === GOVERNO_ADDRESS) {
-        router.replace("/governo/menuGoverno");
-      } else {
-        router.replace("/menu");
-      }
-      setNavigated(true);
+  if (address && !navigated) {
+    if (GOVERNO_ADDRESSES.includes(address)) {
+      router.replace("/governo/menuGoverno");
+    } else {
+      router.replace("/menu");
     }
-  }, [address, navigated]);
+    setNavigated(true);
+  }
+}, [address, navigated]);
+
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>

@@ -49,6 +49,20 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 0, // Remove arredondamento no canto esquerdo
     borderBottomLeftRadius: 0, // Remove arredondamento no canto esquerdo
   },
+  buttonDesconnect:{
+    backgroundColor: "#5d1923",
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
   buttonText: {
     color: "#f2eee2",
     fontSize: 18,
