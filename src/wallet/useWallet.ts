@@ -3,42 +3,79 @@ import { WalletContext } from "./walletProvider";
 import { SessionTypes } from "@walletconnect/types";
 import { Linking } from "react-native";
 
+
 export const useWallet = () => {
-  const context = useContext(WalletContext);
+  const { walletClient, session, setSession } = useContext(WalletContext);
 
-  if (!context) {
-    throw new Error("useWallet deve ser usado dentro de WalletProvider");
+  const connectWallet = async () => {
+  if (!walletClient) return;
+
+  const namespaces = {
+    eip155: {
+      methods: ["eth_sendTransaction", "personal_sign", "eth_signTypedData"],
+      chains: ["eip155:97"],
+      events: ["chainChanged", "accountsChanged"],
+      rpcMap: {
+        "97": "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      },
+    },
+  };
+
+  const { uri, approval } = await walletClient.connect({
+    requiredNamespaces: namespaces,
+  });
+
+  if (uri) {
+  console.log("🔗 URI para WalletConnect:", uri);
+
+  try {
+    await Linking.openURL(uri);
+  } catch (error) {
+    console.error("Erro ao abrir link WalletConnect:", error);
   }
+}
 
-  const { walletClient, session, setSession } = context;
 
-  // Função para conectar a carteira (BNB Testnet)
-  async function connectWallet() {
-    if (!walletClient) return;
+  const sessionResult = await approval();
+  setSession(sessionResult);
+};
+
+
+  const disconnectWallet = async () => {
+    if (!walletClient || !session) return;
 
     try {
-      const { uri, approval } = await walletClient.connect({
-        pairingTopic: session?.topic,
-        requiredNamespaces: {
-          eip155: {
-            methods: ["eth_sendTransaction", "personal_sign"],
-            chains: ["eip155:97"], // BNB Testnet
-            events: ["chainChanged", "accountsChanged"],
+      const existingSession = walletClient.session.get(session.topic);
+      if (existingSession) {
+        await walletClient.disconnect({
+          topic: session.topic,
+          reason: {
+            code: 6000,
+            message: "Desconectado pelo usuário",
           },
-        },
-      });
-
-      if (uri) {
-        // Abre o app da carteira usando o deep link do WalletConnect (pode pedir para o usuário aprovar)
-        await Linking.openURL(uri);
+        });
+        console.log("👋 Sessão desconectada com sucesso.");
+      } else {
+        console.warn("⚠️ Sessão não encontrada no walletClient.");
       }
-
-      const newSession: SessionTypes.Struct = await approval();
-      setSession(newSession);
     } catch (error) {
-      console.error("Erro ao conectar carteira:", error);
+      console.error("Erro ao desconectar:", error);
+    } finally {
+      setSession(null);
     }
-  }
+  };
 
-  return { walletClient, session, connectWallet };
+  const getAddress = () => {
+    if (!session) return null;
+    const account = session.namespaces["eip155"]?.accounts?.[0]; // eip155:97:0x...
+    return account?.split(":")[2] ?? null;
+  };
+
+  return {
+    walletClient,
+    session,
+    connectWallet,
+    disconnectWallet,
+    getAddress,
+  };
 };
