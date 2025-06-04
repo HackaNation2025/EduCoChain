@@ -8,15 +8,14 @@ interface WalletContextType {
   walletClient: SignClient | null;
   session: SessionTypes.Struct | null;
   setSession: React.Dispatch<React.SetStateAction<SessionTypes.Struct | null>>;
-  disconnect: () => Promise<void>;
+  // O disconnect será exposto via useWallet, não diretamente via contexto
+  // disconnect: () => Promise<void>; // Removido daqui
 }
 
-// Inicializa com valor padrão para evitar nulls
 export const WalletContext = createContext<WalletContextType>({
   walletClient: null,
   session: null,
   setSession: () => {},
-  disconnect: async () => {},
 });
 
 export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
@@ -25,6 +24,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     async function initializeClient() {
+      if (walletClient) return; // Adicione esta linha para evitar reinicialização
       console.log("🟡 Inicializando WalletConnect...");
       try {
         const client = await SignClient.init({
@@ -40,65 +40,53 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("🟢 WalletConnect inicializado com sucesso ✅");
         setWalletClient(client);
 
-        // Limpa sessões antigas no início para evitar reconexão automática e erros
-        const sessions = client.session.getAll();
-        if (sessions.length > 0) {
-          console.log(`🧹 Limpeza de ${sessions.length} sessão(ões) armazenada(s)...`);
-          for (const sess of sessions) {
-            try {
-              await client.disconnect({
-                topic: sess.topic,
-                reason: { code: 6000, message: "Limpeza ao iniciar app" },
-              });
-              console.log(`🗑 Sessão ${sess.topic} desconectada.`);
-            } catch (error) {
-              console.warn(`⚠️ Erro ao desconectar sessão ${sess.topic}:`, error);
-            }
-          }
-        }
+        // Não carregue sessões antigas aqui se o objetivo é sempre reconectar
+        // Remova toda a lógica de client.session.getAll() e disconnect dentro deste useEffect
+        // A limpeza deve ser feita na desconexão ou no início do aplicativo se houver necessidade
+        // de garantir um estado limpo antes de uma nova conexão.
+        // No seu caso, a lógica já existente no `disconnectWallet` em `useWallet` é suficiente.
 
-        // Limpa estado e AsyncStorage da sessão local
+        // Limpa o estado da sessão local (para não haver estado residual)
         setSession(null);
-        await AsyncStorage.removeItem("walletconnectSession");
-        console.log("🧹 Sessão local removida do AsyncStorage");
+        await AsyncStorage.removeItem("walletconnectSession"); // Garante que não há sessão salva ao iniciar
+        console.log("🧹 Sessão local removida do AsyncStorage ao iniciar.");
       } catch (error) {
         console.error("🔴 Erro ao inicializar WalletConnect:", error);
       }
     }
 
     initializeClient();
-  }, []);
+  }, []); // Dependência vazia para executar apenas uma vez
 
-  // Persiste sessão no AsyncStorage quando mudar
-  useEffect(() => {
-    if (session) {
-      AsyncStorage.setItem("walletconnectSession", JSON.stringify(session))
-        .then(() => console.log("💾 Sessão salva no AsyncStorage"))
-        .catch((e) => console.error("⚠️ Erro ao salvar sessão no AsyncStorage:", e));
-    }
-  }, [session]);
+  // Remova este useEffect. O salvamento e a limpeza da sessão serão tratados em `useWallet`.
+  // useEffect(() => {
+  //   if (session) {
+  //     AsyncStorage.setItem("walletconnectSession", JSON.stringify(session))
+  //       .then(() => console.log("💾 Sessão salva no AsyncStorage"))
+  //       .catch((e) => console.error("⚠️ Erro ao salvar sessão no AsyncStorage:", e));
+  //   }
+  // }, [session]);
 
-  // Função para desconectar sessão ativa
-  async function disconnect() {
-    if (!walletClient || !session) return;
-
-    try {
-      await walletClient.disconnect({
-        topic: session.topic,
-        reason: { code: 6000, message: "Desconectado pelo usuário" },
-      });
-      console.log("🧹 Sessão desconectada com sucesso.");
-    } catch (error) {
-      console.error("⚠️ Erro ao desconectar sessão:", error);
-    } finally {
-      setSession(null);
-      await AsyncStorage.removeItem("walletconnectSession");
-      console.log("🧹 Sessão local removida do AsyncStorage após desconectar.");
-    }
-  }
+  // A função disconnect será gerenciada dentro de useWallet.
+  // async function disconnect() {
+  //   if (!walletClient || !session) return;
+  //   try {
+  //     await walletClient.disconnect({
+  //       topic: session.topic,
+  //       reason: { code: 6000, message: "Desconectado pelo usuário" },
+  //     });
+  //     console.log("🧹 Sessão desconectada com sucesso.");
+  //   } catch (error) {
+  //     console.error("⚠️ Erro ao desconectar sessão:", error);
+  //   } finally {
+  //     setSession(null);
+  //     await AsyncStorage.removeItem("walletconnectSession");
+  //     console.log("🧹 Sessão local removida do AsyncStorage após desconectar.");
+  //   }
+  // }
 
   return (
-    <WalletContext.Provider value={{ walletClient, session, setSession, disconnect }}>
+    <WalletContext.Provider value={{ walletClient, session, setSession }}>
       {children}
     </WalletContext.Provider>
   );

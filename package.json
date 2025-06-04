@@ -19,7 +19,7 @@
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
     "@reown/walletkit": "^1.2.5",
-    "@walletconnect/client": "^1.8.0",
+    "@walletconnect/ethereum-provider": "^2.21.1",
     "@walletconnect/react-native-compat": "^2.21.0",
     "@walletconnect/sign-client": "^2.21.0",
     "@walletconnect/types": "^2.21.0",

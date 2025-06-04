@@ -29,7 +29,7 @@ export default function MenuGoverno() {
       Alert.alert("Erro", "Endereço de contrato inválido.");
       return;
     }
-    router.push({ pathname: "/governo/detalhes", params: { contrato: enderecoContrato } });
+    router.push({ pathname: "/governo/detalhesGov", params: { contrato: enderecoContrato } });
   };
 
   const handleDisconnect = async () => {

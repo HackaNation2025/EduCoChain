@@ -12,6 +12,7 @@ export default function Layout() {
         <Stack.Screen name="publico/votar" />
         <Stack.Screen name="publico/recompensa" />
         <Stack.Screen name="governo/menuGoverno" />
+        <Stack.Screen name="governo/detalhesGov" />
       </Stack>
     </WalletProvider>
   );
