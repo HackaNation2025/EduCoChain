@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "./styles/styles";
-import { useWallet } from "../src/wallet/useWallet"; // Importe o hook useWallet
+import { useWallet } from "../src/wallet/useWallet"; 
 
 export default function MenuScreen() {
   const router = useRouter();
   const [enderecoContrato, setEnderecoContrato] = useState("");
-  // CORREÇÃO AQUI: Mude 'disconnect' para 'disconnectWallet'
-  const { disconnectWallet, walletClient, session } = useWallet(); // Use o hook useWallet e inclua 'session' para verificar conexão
+  const { disconnectWallet, walletClient, session } = useWallet();
 
   const irParaDetalhes = () => {
     if (!enderecoContrato || enderecoContrato.length !== 42) {
@@ -19,9 +18,8 @@ export default function MenuScreen() {
   };
 
   const handleDisconnect = async () => {
-    // Melhorar a verificação de conexão: walletClient e session devem existir
     if (walletClient && session) {
-      await disconnectWallet(); // Chame a função corretamente
+      await disconnectWallet();
       alert("Carteira desconectada.");
     } else {
       alert("Nenhuma carteira conectada para desconectar.");
@@ -48,8 +46,7 @@ export default function MenuScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Botão de Desconectar */}
-      {/* O botão deve ser visível apenas se houver uma carteira conectada */}
+     
       {session && ( // Renderiza o botão apenas se houver uma sessão ativa
         <TouchableOpacity style={styles.disconnectButton} onPress={handleDisconnect}>
           <Text style={styles.disconnectButtonText}>Desconectar Carteira</Text>
