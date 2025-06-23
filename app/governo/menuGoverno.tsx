@@ -72,9 +72,9 @@ export default function MenuGoverno() {
 
       <TouchableOpacity
         onPress={handleDisconnect}
-        style={[styles.buttonDesconnect, { backgroundColor: "#d9534f", marginTop: 30, paddingVertical: 15 }]}
+        style={[styles.disconnectButton, { backgroundColor: "#d9534f", marginTop: 30, paddingVertical: 15 }]}
       >
-        <Text style={styles.buttonText}>Desconectar</Text>
+        <Text style={styles.disconnectButtonText}>Desconectar Carteira</Text>
       </TouchableOpacity>
     </View>
   );
