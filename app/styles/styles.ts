@@ -63,6 +63,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
+    disconnectButton: {
+    backgroundColor: '#dc3545', // Cor vermelha para indicar desconexão
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  disconnectButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
   buttonText: {
     color: "#f2eee2",
     fontSize: 18,
