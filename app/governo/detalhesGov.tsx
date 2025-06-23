@@ -170,7 +170,7 @@ export default function DetalhesContratoGoverno() {
 
             <Text style={styles.label}>Órgão Responsável:</Text>
             <View style={styles.copyContainer}>
-              <Text style={styles.text} numberOfLines={1} ellipsizeMode="middle">{governo}</Text>
+              <Text style={styles.copyableText} numberOfLines={1} ellipsizeMode="middle">{governo}</Text>
               <TouchableOpacity onPress={() => copyToClipboard(governo)} style={styles.copyButton}>
                 <Text style={styles.copyButtonText}>Copiar</Text>
               </TouchableOpacity>
@@ -178,7 +178,7 @@ export default function DetalhesContratoGoverno() {
 
             <Text style={styles.label}>Empresa Contratada:</Text>
             <View style={styles.copyContainer}>
-              <Text style={styles.text} numberOfLines={1} ellipsizeMode="middle">{empresa}</Text>
+              <Text style={styles.copyableText} numberOfLines={1} ellipsizeMode="middle">{empresa}</Text>
               <TouchableOpacity onPress={() => copyToClipboard(empresa)} style={styles.copyButton}>
                 <Text style={styles.copyButtonText}>Copiar</Text>
               </TouchableOpacity>

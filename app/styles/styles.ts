@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
   },
   buttonDesconnect:{
     backgroundColor: "#5d1923",
-    width: 50,
-    height: 50,
+    width: 140,
+    height: 60,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,

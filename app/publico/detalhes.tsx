@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from "react-native"; // Importe Alert
 import * as Clipboard from "expo-clipboard";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import styles from "../styles/detalhes";
@@ -32,6 +32,7 @@ export default function DetalhesContrato() {
     async function fetchData() {
       try {
         setLoading(true);
+        setError(""); // Limpa qualquer erro anterior
 
         if (!contrato || typeof contrato !== "string") {
           throw new Error("Endereço de contrato não fornecido.");
@@ -64,8 +65,8 @@ export default function DetalhesContrato() {
         setEstadoContrato(estado);
         setOrgaoGoverno(orgao);
         setQuantidadeEstipulada(Number(quantidade));
-      } catch (error) {
-        console.error("❌ Erro ao carregar os detalhes do contrato:", error);
+      } catch (err) { // Mudei para 'err' para consistência
+        console.error("❌ Erro ao carregar os detalhes do contrato:", err);
         setError("Erro ao carregar os detalhes do contrato. Verifique o endereço e tente novamente.");
       } finally {
         setLoading(false);
@@ -77,6 +78,7 @@ export default function DetalhesContrato() {
 
   const copyToClipboard = (text: string) => {
     Clipboard.setStringAsync(text);
+    Alert.alert("Copiado", "Texto copiado para a área de transferência."); // Adicionei o alerta aqui
   };
 
   return (
@@ -97,7 +99,7 @@ export default function DetalhesContrato() {
 
             <Text style={styles.label}>Órgão Responsável:</Text>
             <View style={styles.copyContainer}>
-              <Text style={styles.text} numberOfLines={1} ellipsizeMode="middle">{governo}</Text>
+              <Text style={styles.copyableText} numberOfLines={1} ellipsizeMode="middle">{governo}</Text>
               <TouchableOpacity onPress={() => copyToClipboard(governo)} style={styles.copyButton}>
                 <Text style={styles.copyButtonText}>Copiar</Text>
               </TouchableOpacity>
@@ -105,7 +107,7 @@ export default function DetalhesContrato() {
 
             <Text style={styles.label}>Empresa Contratada:</Text>
             <View style={styles.copyContainer}>
-              <Text style={styles.text} numberOfLines={1} ellipsizeMode="middle">{empresa}</Text>
+              <Text style={styles.copyableText} numberOfLines={1} ellipsizeMode="middle">{empresa}</Text>
               <TouchableOpacity onPress={() => copyToClipboard(empresa)} style={styles.copyButton}>
                 <Text style={styles.copyButtonText}>Copiar</Text>
               </TouchableOpacity>
